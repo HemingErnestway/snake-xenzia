@@ -1,6 +1,7 @@
 "use client";
 
 import * as THREE from "three";
+import { OrbitControls } from "three/addons";
 import { useEffect, useRef } from "react";
 
 export default function GameScene() {
@@ -26,9 +27,13 @@ export default function GameScene() {
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
+    const controls = new OrbitControls(camera, canvasRef.current);
+
+    const axesHelper = new THREE.AxesHelper();
+    scene.add(axesHelper);
+
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: "green" });
-
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
@@ -43,9 +48,11 @@ export default function GameScene() {
     return () => {
       cancelAnimationFrame(requestId);
 
+      controls.dispose();
+      scene.remove(axesHelper);
+
       geometry.dispose();
       material.dispose();
-
       scene.remove(cube);
 
       renderer.dispose();
