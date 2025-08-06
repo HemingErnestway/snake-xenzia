@@ -32,10 +32,15 @@ export function initGame(canvas) {
   window.addEventListener("resize", onResize);
 
   let requestId;
+  let lastTime = performance.now();
 
   function render() {
+    const now = performance.now();
+    const delta = (now - lastTime) / 1000;
+    lastTime = now;
+
     requestId = requestAnimationFrame(render);
-    gameController.update();
+    gameController.update(delta);
     renderer.render(sceneController.scene, sceneController.camera);
   }
   render();

@@ -7,7 +7,7 @@ export const CONFIG = {
       far: 1000,
     },
     position: {
-      x: 10,
+      x: 0,
       y: 10,
       z: 10,
     },
@@ -30,9 +30,10 @@ export const CONFIG = {
     color: "green",
   },
   snakeHead: {
-    width: 1,
-    height: 1,
-    depth: 1,
+    width: 1.1,
+    height: 1.1,
+    depth: 1.1,
     color: "yellow",
+    speed: 5,
   },
 };

@@ -8,7 +8,13 @@ export class SnakeHead {
   /** @type {import("three").Vector3} */
   position;
 
-  /** @type {SnakeSegment | null} */
+  /** @type {import("three").Vector3} */
+  direction;
+
+  /** @type {number} */
+  speed;
+
+  /** @type {SnakeSegment[]} */
   tail;
 
   /**
@@ -16,7 +22,9 @@ export class SnakeHead {
    */
   constructor(position) {
     this.position = position;
-    this.tail = null;
+    this.direction = new THREE.Vector3(0, 0, -1);
+    this.speed = CONFIG.snakeHead.speed;
+    this.tail = [];
 
     const geometry = new THREE.BoxGeometry(
       CONFIG.snakeHead.width,

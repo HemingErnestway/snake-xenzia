@@ -16,32 +16,31 @@ export class SnakeController {
     this.snake = new SnakeHead(new THREE.Vector3(0, 0, 0));
     this.meshes.push(this.snake.mesh);
 
-    // create first tail segment
-    this.snake.tail = new SnakeSegment(
-      new THREE.Vector3(0, 0, 0),
-      new THREE.Vector3(0, 0, 2),
-    );
-    this.meshes.push(this.snake.tail.mesh);
-
-    // create rest (length - 1) tail segments
-    for (let i = 0; i < length - 1; ++i) {
-      const lastSegment = this.findLastSegment();
-
-      lastSegment.next = new SnakeSegment(
-        new THREE.Vector3(lastSegment.backPosition.x, lastSegment.backPosition.y, lastSegment.backPosition.z),
-        new THREE.Vector3(lastSegment.backPosition.x, lastSegment.backPosition.y, lastSegment.backPosition.z + 2),
+    for (let i = 0; i < length; ++i) {
+      const segment = new SnakeSegment(
+        new THREE.Vector3(0, 0, i * 2),
+        new THREE.Vector3(0, 0, i * 2 + 2),
       );
-      this.meshes.push(lastSegment.next.mesh);
+
+      this.snake.tail.push(segment);
+      this.meshes.push(segment.mesh);
     }
   }
 
-  findLastSegment() {
-    let segment = this.snake.tail;
+  /**
+   * @param {import("three").Vector3} movement
+   */
+  moveSnake(movement) {
+    // move head
+    this.snake.position.add(movement);
+    this.snake.mesh.position.add(movement);
 
-    while (segment.next) {
-      segment = segment.next;
-    }
+    // move tail
+    const lastBackPosition = this.snake.position.clone();
 
-    return segment;
+    this.snake.tail.forEach(segment => {
+      segment.frontPosition = lastBackPosition;
+
+    });
   }
 }

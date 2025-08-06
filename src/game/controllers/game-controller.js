@@ -19,7 +19,14 @@ export class GameController {
     this.snakeController.meshes.forEach(mesh => sceneController.scene.add(mesh));
   }
 
-  update() {
+  /**
+   * @param {number} delta
+   */
+  update(delta) {
+    const snake = this.snakeController.snake;
+    const movement = snake.direction.clone().multiplyScalar(snake.speed * delta);
 
+    this.snakeController.moveSnake(movement);
+    this.sceneController.moveCamera(movement, snake.position.clone());
   }
 }

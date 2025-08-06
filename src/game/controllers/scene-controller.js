@@ -41,4 +41,13 @@ export class SceneController {
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
   }
+
+  /**
+   * @param {import("three").Vector3} movement
+   * @param {import("three").Vector3} snakePosition
+   */
+  moveCamera(movement, snakePosition) {
+    this.camera.position.add(movement);
+    this.camera.lookAt(snakePosition.add(movement));
+  }
 }
