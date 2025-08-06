@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
+    "checkJs": true,
+    "allowJs": true,
     "paths": {
       "@/*": ["./src/*"]
     }
-  }
+  },
+  "exclude": [
+    "node_modules",
+    ".next"
+  ]
 }
