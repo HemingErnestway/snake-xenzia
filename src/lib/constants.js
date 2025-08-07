@@ -9,7 +9,7 @@ export const CONFIG = {
     position: {
       x: 0,
       y: 10,
-      z: 10,
+      z: -10,
     },
     direction: {
       x: 0,

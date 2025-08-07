@@ -30,12 +30,13 @@ export class SnakeSegment {
       CONFIG.snakeSegment.depth,
     );
 
+    geometry.translate(0, 0, CONFIG.snakeSegment.depth / 2);
+
     const material = new THREE.MeshBasicMaterial({
       color: CONFIG.snakeSegment.color,
     });
 
     this.mesh = new THREE.Mesh(geometry, material);
-
     this.mesh.add(new AxesHelper(3));
 
     const segmentPosition = new THREE.Vector3()

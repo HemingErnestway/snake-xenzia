@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { CONFIG } from "@/lib/constants";
+import { AxesHelper } from "three";
 
 export class SnakeHead {
   /** @type {import("three").Mesh} */
@@ -25,7 +26,7 @@ export class SnakeHead {
    */
   constructor(position) {
     this.position = position;
-    this.direction = new THREE.Vector3(0, 0, -1);
+    this.direction = new THREE.Vector3(0, 0, 1);
     this.speed = CONFIG.snakeHead.speed;
     this.agility = CONFIG.snakeHead.agility;
     this.tail = [];
@@ -36,11 +37,15 @@ export class SnakeHead {
       CONFIG.snakeHead.depth,
     );
 
+    geometry.translate(0, 0, CONFIG.snakeHead.depth / 2);
+
     const material = new THREE.MeshBasicMaterial({
       color: CONFIG.snakeHead.color,
     });
 
     this.mesh = new THREE.Mesh(geometry, material);
+    this.mesh.add(new AxesHelper(3));
+
     this.mesh.position.set(position.x, position.y, position.z);
   }
 }

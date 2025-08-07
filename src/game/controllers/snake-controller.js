@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { SnakeHead } from "@/game/entities/snake-head";
 import { SnakeSegment } from "@/game/entities/snake-segment";
+import { CONFIG } from "@/lib/constants";
 
 export class SnakeController {
   /** @type {import("three").Mesh[]} */
@@ -18,11 +19,12 @@ export class SnakeController {
 
     for (let i = 0; i < length; ++i) {
       const segment = new SnakeSegment(
-        new THREE.Vector3(0, 0, i * 2),
-        new THREE.Vector3(0, 0, i * 2 + 2),
+        new THREE.Vector3(0, 0, -i * 2),
+        new THREE.Vector3(0, 0, -i * 2 - 2),
       );
 
       this.snake.tail.push(segment);
+      if (i % 2 === 0) segment.mesh.material.setValues({ color: "darkgreen" });
       this.meshes.push(segment.mesh);
     }
   }
@@ -41,11 +43,17 @@ export class SnakeController {
     this.snake.direction.set(moveDirection.x, moveDirection.y, moveDirection.z);
 
     // move tail
-    const lastBackPosition = this.snake.position.clone();
+    let prevPivot = this.snake.mesh.position.clone();
 
     this.snake.tail.forEach(segment => {
-      segment.frontPosition = lastBackPosition;
+      segment.mesh.lookAt(prevPivot);
 
+      const direction = new THREE.Vector3(prevPivot.x - segment.mesh.position.x, 0, prevPivot.z - segment.mesh.position.z);
+      const normalized = direction.clone().normalize();
+      const scale = direction.length() - CONFIG.snakeSegment.depth;
+
+      segment.mesh.position.add(new THREE.Vector3(normalized.x * scale, 0, normalized.z * scale));
+      prevPivot = segment.mesh.position.clone();
     });
   }
 }
