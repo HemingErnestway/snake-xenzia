@@ -29,11 +29,19 @@ export class SnakeController {
 
   /**
    * @param {import("three").Vector3} movement
+   * @param {import("three").Vector3} moveDirection
+   * @param {number} angle
    */
-  moveSnake(movement) {
+  moveSnake(movement, moveDirection, angle) {
     // move head
     this.snake.position.add(movement);
     this.snake.mesh.position.add(movement);
+    this.snake.mesh.rotateY(-angle);
+
+    // console.log(moveDirection);
+    console.log(moveDirection);
+
+    this.snake.direction.set(moveDirection.x, moveDirection.y, moveDirection.z);
 
     // move tail
     const lastBackPosition = this.snake.position.clone();

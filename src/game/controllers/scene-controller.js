@@ -45,9 +45,10 @@ export class SceneController {
   /**
    * @param {import("three").Vector3} movement
    * @param {import("three").Vector3} snakePosition
+   * @param {import("three").Vector3} worldOffset
    */
-  moveCamera(movement, snakePosition) {
-    this.camera.position.add(movement);
+  moveCamera(movement, snakePosition, worldOffset) {
+    this.camera.position.copy(worldOffset);
     this.camera.lookAt(snakePosition.add(movement));
   }
 }
