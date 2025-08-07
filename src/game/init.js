@@ -3,6 +3,7 @@ import { OrbitControls } from "three/addons";
 import { SceneController } from "@/game/controllers/scene-controller";
 import { SnakeController } from "@/game/controllers/snake-controller";
 import { GameController } from "@/game/controllers/game-controller";
+import { InputController } from "@/game/controllers/input-controller/input-controller";
 
 /**
  * @param canvas
@@ -10,7 +11,19 @@ import { GameController } from "@/game/controllers/game-controller";
 export function initGame(canvas) {
   const sceneController = new SceneController();
   const snakeController = new SnakeController();
-  const gameController = new GameController(sceneController, snakeController);
+
+  const inputController = new InputController({
+    "left": {
+      keys: [37, 65],
+    },
+    "right": {
+      keys: [39, 68],
+    },
+  });
+
+  inputController.attach(document, document);
+
+  const gameController = new GameController(sceneController, snakeController, inputController);
 
   const controls = new OrbitControls(sceneController.camera, canvas);
 
@@ -51,6 +64,7 @@ export function initGame(canvas) {
 
     controls.dispose();
     sceneController.scene.remove(axesHelper);
+    inputController.detach();
 
     renderer.dispose();
   };

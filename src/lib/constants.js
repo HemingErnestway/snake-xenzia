@@ -35,5 +35,6 @@ export const CONFIG = {
     depth: 1.1,
     color: "yellow",
     speed: 5,
+    agility: 1.5,
   },
 };

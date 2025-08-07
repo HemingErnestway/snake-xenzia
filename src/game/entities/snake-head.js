@@ -14,6 +14,9 @@ export class SnakeHead {
   /** @type {number} */
   speed;
 
+  /** @type {number} */
+  agility;
+
   /** @type {SnakeSegment[]} */
   tail;
 
@@ -24,6 +27,7 @@ export class SnakeHead {
     this.position = position;
     this.direction = new THREE.Vector3(0, 0, -1);
     this.speed = CONFIG.snakeHead.speed;
+    this.agility = CONFIG.snakeHead.agility;
     this.tail = [];
 
     const geometry = new THREE.BoxGeometry(

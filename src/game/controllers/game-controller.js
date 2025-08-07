@@ -8,16 +8,21 @@ export class GameController {
   /** @type {SnakeController} */
   snakeController;
 
+  /** @type {InputController} */
+  inputController;
+
   /** @type {Fruit[]} */
   fruits;
 
   /**
    * @param {SceneController} sceneController
    * @param {SnakeController} snakeController
+   * @param {InputController} inputController
    */
-  constructor(sceneController, snakeController) {
+  constructor(sceneController, snakeController, inputController) {
     this.sceneController = sceneController;
     this.snakeController = snakeController;
+    this.inputController = inputController;
 
     this.snakeController.meshes.forEach(mesh => sceneController.scene.add(mesh));
   }
@@ -30,8 +35,13 @@ export class GameController {
     const prevDirection = snake.direction.clone();
     const prevPosition = snake.position.clone();
 
-    // change direction on input
-    const angle = 0.8 * Math.PI / 180;  // rad
+    // change angle on input
+    const coefficient
+      = this.inputController.isActionActive("left") ? -1
+      : this.inputController.isActionActive("right") ? 1
+      : 0;
+
+    const angle = coefficient * snake.agility * Math.PI / 180;  // rad
 
     // rotate direction vector by the angle
     const moveDirection = new THREE.Vector3(

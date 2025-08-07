@@ -38,9 +38,6 @@ export class SnakeController {
     this.snake.mesh.position.add(movement);
     this.snake.mesh.rotateY(-angle);
 
-    // console.log(moveDirection);
-    console.log(moveDirection);
-
     this.snake.direction.set(moveDirection.x, moveDirection.y, moveDirection.z);
 
     // move tail
