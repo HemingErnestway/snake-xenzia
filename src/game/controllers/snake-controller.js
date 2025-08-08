@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { SnakeHead } from "@/game/entities/snake-head";
 import { SnakeSegment } from "@/game/entities/snake-segment";
 import { CONFIG } from "@/lib/constants";
+import { segmentCircleIntersections } from "@/lib/functions";
 
 export class SnakeController {
   /** @type {import("three").Mesh[]} */
@@ -10,12 +11,16 @@ export class SnakeController {
   /** @type {SnakeHead} */
   snake;
 
+  /** @type {import("three").Vector3[]} */
+  pathPoints = [];
+
   /**
    * @param {number} [length = 3]
    */
   constructor(length = 3) {
     this.snake = new SnakeHead(new THREE.Vector3(0, 0, 0));
     this.meshes.push(this.snake.mesh);
+    this.pathPoints.push(this.snake.mesh.position.clone());
 
     for (let i = 0; i < length; ++i) {
       const segment = new SnakeSegment(
@@ -24,8 +29,13 @@ export class SnakeController {
       );
 
       this.snake.tail.push(segment);
-      if (i % 2 === 0) segment.mesh.material.setValues({ color: "darkgreen" });
+
+      if (i % 2 === 0) {
+        segment.mesh.material.setValues({ color: "darkgreen" });
+      }
+
       this.meshes.push(segment.mesh);
+      this.pathPoints.unshift(segment.mesh.position.clone());
     }
   }
 
@@ -35,25 +45,51 @@ export class SnakeController {
    * @param {number} angle
    */
   moveSnake(movement, moveDirection, angle) {
+    const {snake} = this;
     // move head
     this.snake.position.add(movement);
     this.snake.mesh.position.add(movement);
     this.snake.mesh.rotateY(-angle);
 
+
+    this.pathPoints.push(this.snake.mesh.position.clone());
+
     this.snake.direction.set(moveDirection.x, moveDirection.y, moveDirection.z);
 
     // move tail
     let prevPivot = this.snake.mesh.position.clone();
+    let visitedIndex = this.pathPoints.length;
 
     this.snake.tail.forEach(segment => {
+      // circumference
+      const center = prevPivot;
+      const radius = CONFIG.snakeSegment.depth;
+
+      let intersectionPoint = prevPivot.clone();
+
+      for (let i = visitedIndex - 1; i > 0; --i) {
+        // mark as visited
+        visitedIndex = i;
+
+        // path interval
+        const a = this.pathPoints[i];
+        const b = this.pathPoints[i - 1];
+
+        const intersections = segmentCircleIntersections(a, b, center, radius);
+
+        if (intersections.length !== 1) {
+          // not intersecting
+          continue;
+        }
+
+        intersectionPoint = intersections[0];
+        break;
+      }
+
+      // move segment
+      segment.mesh.position.set(intersectionPoint.x, intersectionPoint.y, intersectionPoint.z);
       segment.mesh.lookAt(prevPivot);
-
-      const direction = new THREE.Vector3(prevPivot.x - segment.mesh.position.x, 0, prevPivot.z - segment.mesh.position.z);
-      const normalized = direction.clone().normalize();
-      const scale = direction.length() - CONFIG.snakeSegment.depth;
-
-      segment.mesh.position.add(new THREE.Vector3(normalized.x * scale, 0, normalized.z * scale));
-      prevPivot = segment.mesh.position.clone();
+      prevPivot = intersectionPoint.clone();
     });
   }
 }

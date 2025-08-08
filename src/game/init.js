@@ -10,7 +10,7 @@ import { InputController } from "@/game/controllers/input-controller/input-contr
  */
 export function initGame(canvas) {
   const sceneController = new SceneController();
-  const snakeController = new SnakeController(7);
+  const snakeController = new SnakeController(15);
 
   const inputController = new InputController({
     "left": {
