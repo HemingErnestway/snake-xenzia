@@ -5,9 +5,6 @@ export class Fruit {
   /** @type {import("three").Mesh} */
   mesh;
 
-  /** @type {import("three").Vector3} */
-  position;
-
   constructor() {
     const geometry = new THREE.SphereGeometry(
       CONFIG.fruit.radius,

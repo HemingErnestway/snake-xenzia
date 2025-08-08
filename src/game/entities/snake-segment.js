@@ -6,24 +6,10 @@ export class SnakeSegment {
   /** @type {import("three").Mesh} */
   mesh;
 
-  /** @type {import("three").Vector3} */
-  frontPosition;
-
-  /** @type {import("three").Vector3} */
-  backPosition;
-
-  /** @type {SnakeSegment | null} */
-  next;
-
   /**
-   * @param {import("three").Vector3} frontPosition
-   * @param {import("three").Vector3} backPosition
+   * @param {import("three").Vector3} position
    */
-  constructor(frontPosition, backPosition) {
-    this.frontPosition = frontPosition;
-    this.backPosition = backPosition;
-    this.next = null;
-
+  constructor(position) {
     const geometry = new THREE.BoxGeometry(
       CONFIG.snakeSegment.width,
       CONFIG.snakeSegment.height,
@@ -39,10 +25,6 @@ export class SnakeSegment {
     this.mesh = new THREE.Mesh(geometry, material);
     this.mesh.add(new AxesHelper(3));
 
-    const segmentPosition = new THREE.Vector3()
-      .addVectors(frontPosition, backPosition)
-      .multiplyScalar(0.5);
-
-    this.mesh.position.set(segmentPosition.x, segmentPosition.y, segmentPosition.z);
+    this.mesh.position.set(position.x, position.y, position.z);
   }
 }

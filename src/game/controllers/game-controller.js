@@ -34,8 +34,10 @@ export class GameController {
     const { sceneController, snakeController, inputController } = this;
 
     const snake = snakeController.snake;
-    const prevDirection = snake.direction.clone();
-    const prevPosition = snake.position.clone();
+
+    const prevPosition = snake.mesh.position.clone();
+    const prevDirection = new THREE.Vector3();
+    snake.mesh.getWorldDirection(prevDirection);
 
     // change angle on input
     const coefficient

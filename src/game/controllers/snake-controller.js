@@ -18,20 +18,16 @@ export class SnakeController {
    * @param {number} [length = 3]
    */
   constructor(length = 3) {
-    this.snake = new SnakeHead(new THREE.Vector3(0, 0, 0));
+    this.snake = new SnakeHead(new THREE.Vector3(0, 0, 0));  // FIXME
     this.meshes.push(this.snake.mesh);
     this.pathPoints.push(this.snake.mesh.position.clone());
 
     for (let i = 0; i < length; ++i) {
-      const segment = new SnakeSegment(
-        new THREE.Vector3(0, 0, -i * 2),
-        new THREE.Vector3(0, 0, -i * 2 - 2),
-      );
-
+      const segment = new SnakeSegment(new THREE.Vector3(0, 0, -i * 2 - 2));  // FIXME
       this.snake.tail.push(segment);
 
       if (i % 2 === 0) {
-        segment.mesh.material.setValues({ color: "darkgreen" });
+        segment.mesh.material.setValues({ color: "darkgreen" });  // FIXME
       }
 
       this.meshes.push(segment.mesh);
@@ -48,13 +44,10 @@ export class SnakeController {
     const { snake, pathPoints } = this;
 
     // move head
-    snake.position.add(movement);
     snake.mesh.position.add(movement);
-    snake.mesh.rotateY(-angle);
+    snake.mesh.rotateY(-angle);  // FIXME
 
     pathPoints.push(snake.mesh.position.clone());
-
-    snake.direction.set(moveDirection.x, moveDirection.y, moveDirection.z);
 
     // move tail
     let prevPivot = snake.mesh.position.clone();

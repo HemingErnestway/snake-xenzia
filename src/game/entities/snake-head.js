@@ -6,12 +6,6 @@ export class SnakeHead {
   /** @type {import("three").Mesh} */
   mesh;
 
-  /** @type {import("three").Vector3} */
-  position;
-
-  /** @type {import("three").Vector3} */
-  direction;
-
   /** @type {number} */
   speed;
 
@@ -25,8 +19,6 @@ export class SnakeHead {
    * @param {import("three").Vector3} position
    */
   constructor(position) {
-    this.position = position;
-    this.direction = new THREE.Vector3(0, 0, 1);
     this.speed = CONFIG.snakeHead.speed;
     this.agility = CONFIG.snakeHead.agility;
     this.tail = [];
