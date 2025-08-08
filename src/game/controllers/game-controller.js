@@ -31,14 +31,16 @@ export class GameController {
    * @param {number} delta
    */
   update(delta) {
-    const snake = this.snakeController.snake;
+    const { sceneController, snakeController, inputController } = this;
+
+    const snake = snakeController.snake;
     const prevDirection = snake.direction.clone();
     const prevPosition = snake.position.clone();
 
     // change angle on input
     const coefficient
-      = this.inputController.isActionActive("left") ? -1
-      : this.inputController.isActionActive("right") ? 1
+      = inputController.isActionActive("left") ? -1
+      : inputController.isActionActive("right") ? 1
       : 0;
 
     const angle = coefficient * snake.agility * Math.PI / 180;  // rad
@@ -52,7 +54,7 @@ export class GameController {
 
     const movement = moveDirection.clone().multiplyScalar(snake.speed * delta);
 
-    this.snakeController.moveSnake(movement, moveDirection, angle);
+    snakeController.moveSnake(movement, moveDirection, angle);
 
     const cameraOffset = new THREE.Vector3(
       CONFIG.camera.position.x,
@@ -62,6 +64,6 @@ export class GameController {
 
     const worldOffset = cameraOffset.clone().applyMatrix4(snake.mesh.matrixWorld);
 
-    this.sceneController.moveCamera(movement, prevPosition, worldOffset);
+    sceneController.moveCamera(movement, prevPosition, worldOffset);
   }
 }

@@ -5,11 +5,11 @@ import { CONFIG } from "@/lib/constants";
 import { segmentCircleIntersections } from "@/lib/functions";
 
 export class SnakeController {
-  /** @type {import("three").Mesh[]} */
-  meshes = [];
-
   /** @type {SnakeHead} */
   snake;
+
+  /** @type {import("three").Mesh[]} */
+  meshes = [];
 
   /** @type {import("three").Vector3[]} */
   pathPoints = [];
@@ -45,22 +45,22 @@ export class SnakeController {
    * @param {number} angle
    */
   moveSnake(movement, moveDirection, angle) {
-    const {snake} = this;
+    const { snake, pathPoints } = this;
+
     // move head
-    this.snake.position.add(movement);
-    this.snake.mesh.position.add(movement);
-    this.snake.mesh.rotateY(-angle);
+    snake.position.add(movement);
+    snake.mesh.position.add(movement);
+    snake.mesh.rotateY(-angle);
 
+    pathPoints.push(snake.mesh.position.clone());
 
-    this.pathPoints.push(this.snake.mesh.position.clone());
-
-    this.snake.direction.set(moveDirection.x, moveDirection.y, moveDirection.z);
+    snake.direction.set(moveDirection.x, moveDirection.y, moveDirection.z);
 
     // move tail
-    let prevPivot = this.snake.mesh.position.clone();
-    let visitedIndex = this.pathPoints.length;
+    let prevPivot = snake.mesh.position.clone();
+    let visitedIndex = pathPoints.length;
 
-    this.snake.tail.forEach(segment => {
+    snake.tail.forEach(segment => {
       // circumference
       const center = prevPivot;
       const radius = CONFIG.snakeSegment.depth;
@@ -72,8 +72,8 @@ export class SnakeController {
         visitedIndex = i;
 
         // path interval
-        const a = this.pathPoints[i];
-        const b = this.pathPoints[i - 1];
+        const a = pathPoints[i];
+        const b = pathPoints[i - 1];
 
         const intersections = segmentCircleIntersections(a, b, center, radius);
 
