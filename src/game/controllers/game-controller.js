@@ -34,29 +34,24 @@ export class GameController {
     const { sceneController, snakeController, inputController } = this;
 
     const snake = snakeController.snake;
-
     const prevPosition = snake.mesh.position.clone();
-    const prevDirection = new THREE.Vector3();
-    snake.mesh.getWorldDirection(prevDirection);
 
-    // change angle on input
-    const coefficient
-      = inputController.isActionActive("left") ? -1
-      : inputController.isActionActive("right") ? 1
-      : 0;
+    // turn direction based on active keys
+    // left:      1
+    // right:    -1
+    // none/both: 0
+    const turnDirectionCoefficient
+      = Number(inputController.isActionActive("left"))
+      - Number(inputController.isActionActive("right"));
 
-    const angle = coefficient * snake.agility * Math.PI / 180;  // rad
+    const angle = turnDirectionCoefficient * snake.agility * Math.PI / 180;  // rad
+    snake.mesh.rotateY(angle);
 
-    // rotate direction vector by the angle
-    const moveDirection = new THREE.Vector3(
-      prevDirection.x * Math.cos(angle) - prevDirection.z * Math.sin(angle),
-      0,
-      prevDirection.x * Math.sin(angle) + prevDirection.z * Math.cos(angle),
-    );
+    const direction = new THREE.Vector3();
+    snake.mesh.getWorldDirection(direction);
 
-    const movement = moveDirection.clone().multiplyScalar(snake.speed * delta);
-
-    snakeController.moveSnake(movement, moveDirection, angle);
+    const movement = direction.clone().multiplyScalar(snake.speed * delta);
+    snakeController.moveSnake(movement);
 
     const cameraOffset = new THREE.Vector3(
       CONFIG.camera.position.x,
@@ -65,7 +60,6 @@ export class GameController {
     );
 
     const worldOffset = cameraOffset.clone().applyMatrix4(snake.mesh.matrixWorld);
-
     sceneController.moveCamera(movement, prevPosition, worldOffset);
   }
 }

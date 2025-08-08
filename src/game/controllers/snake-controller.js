@@ -37,16 +37,12 @@ export class SnakeController {
 
   /**
    * @param {import("three").Vector3} movement
-   * @param {import("three").Vector3} moveDirection
-   * @param {number} angle
    */
-  moveSnake(movement, moveDirection, angle) {
+  moveSnake(movement) {
     const { snake, pathPoints } = this;
 
     // move head
     snake.mesh.position.add(movement);
-    snake.mesh.rotateY(-angle);  // FIXME
-
     pathPoints.push(snake.mesh.position.clone());
 
     // move tail
